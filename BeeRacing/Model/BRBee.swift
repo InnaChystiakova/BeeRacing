@@ -36,12 +36,10 @@ class BRBeeMapper {
             return beeList.map { $0.beeItem }
         }
     }
-
-    private static let OK_200: Int = 200
     private init() {}
 
     static func map(_ data: Data, from response: HTTPURLResponse) throws -> [BRBee] {
-        guard response.statusCode == OK_200, let bees = try? JSONDecoder().decode(Root.self, from: data) else {
+        guard let bees = try? JSONDecoder().decode(Root.self, from: data) else {
             throw BRSessionError.invalidData
         }
 

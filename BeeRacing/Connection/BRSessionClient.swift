@@ -7,7 +7,7 @@
 
 import Foundation
 
-class BRSessionClient {
+final class BRSessionClient {
     private let session: BRSessionProtocol
     
     public init(session: BRSessionProtocol = URLSession.shared) {

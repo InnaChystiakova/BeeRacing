@@ -43,7 +43,7 @@ class BRViewModel: ObservableObject {
                 self.isRaceStarted = true
             }
         } catch {
-            errorHandling(with: error)
+            alertUI(with: error)
         }
     }
     
@@ -55,16 +55,24 @@ class BRViewModel: ObservableObject {
         
         do {
             let result = try await sessionClient.performRequest(from: url)
-            let beeStatus = try BRBeeMapper.map(result.data, from: result.response as! HTTPURLResponse)
-            DispatchQueue.main.async {
-                self.beeList = beeStatus
+            let viewModelResult = try BRValidator.handleJSON(with: result)
+            
+            switch viewModelResult {
+            case let .bee(beeList):
+                DispatchQueue.main.async {
+                    self.beeList = beeList
+                }
+            case let .captcha(captcha):
+                DispatchQueue.main.async {
+                    print("Captcha!!!")
+                }
             }
         } catch {
-            errorHandling(with: error)
+            alertUI(with: error)
         }
     }
     
-    private func errorHandling(with error: Error) {
+    private func alertUI(with error: Error) {
         guard let brError = error as? BRSessionError else {
             showErrorWithDescription(description: error.localizedDescription)
             return

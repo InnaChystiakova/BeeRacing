@@ -11,6 +11,7 @@ public enum BRSessionError: Error {
     case connectivity
     case invalidData
     case badURL
+    case invalidResponse
 }
 
 public typealias BRSessionClientResponse = (data: Data, response: URLResponse)

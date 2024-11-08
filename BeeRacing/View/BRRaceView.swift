@@ -12,12 +12,19 @@ struct BRRaceView: View {
     
     var body: some View {
         VStack {
-            List {
-                
+            List(viewModel.beeList) { bee in
+                HStack {
+                    Text(bee.name)
+                        .font(.headline)
+                    Circle()
+                        .fill(Color.colorFromHex(hex: bee.color))
+                        .frame(width: 20, height: 20)
+                }
             }
+            .listStyle(.insetGrouped)
             .navigationBarBackButtonHidden(true)
             .task {
-                await viewModel.startRace()
+                viewModel.startRace()
             }
         }
     }
