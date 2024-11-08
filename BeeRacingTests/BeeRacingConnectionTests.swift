@@ -6,22 +6,7 @@
 //
 
 import XCTest
-
-enum BRSessionError: Error {
-    case connectivity
-}
-
-typealias BRSessionClientResult = Result<(Data, URLResponse), Error>
-
-protocol BRSessionProtocol {
-    func get(from url: URL, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse)
-}
-
-extension URLSession: BRSessionProtocol {
-    public func get(from url: URL, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse) {
-        try await data(from: url, delegate: delegate)
-    }
-}
+@testable import BeeRacing
 
 class BeeRacingSessionClient {
     private let session: BRSessionProtocol

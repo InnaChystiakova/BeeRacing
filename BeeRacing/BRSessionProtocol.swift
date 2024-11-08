@@ -7,3 +7,18 @@
 
 import Foundation
 
+public enum BRSessionError: Error {
+    case connectivity
+}
+
+public typealias BRSessionClientResult = Result<(Data, URLResponse), Error>
+
+public protocol BRSessionProtocol {
+    func get(from url: URL, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse)
+}
+
+extension URLSession: BRSessionProtocol {
+    public func get(from url: URL, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse) {
+        try await data(from: url, delegate: delegate)
+    }
+}
