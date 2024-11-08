@@ -31,9 +31,7 @@ class BRViewModel: ObservableObject {
     
     func getTimer() async {
         guard let url = URL(string: timerAPIURLString) else {
-            DispatchQueue.main.async {
-                self.error = BRSessionError.badURL.localizedDescription
-            }
+            showErrorWithDescription(description: BRSessionError.badURL.localizedDescription)
             return
         }
         
@@ -44,22 +42,14 @@ class BRViewModel: ObservableObject {
                 self.timerData = timerData.timeInSeconds
                 self.isRaceStarted = true
             }
-        } catch let brError as BRSessionError {
-            DispatchQueue.main.async {
-                self.error = brError.localizedDescription
-            }
         } catch {
-            DispatchQueue.main.async {
-                self.error = error.localizedDescription
-            }
+            errorHandling(with: error)
         }
     }
     
     func updateBeePositions() async {
         guard let url = URL(string: raceAPIURLString) else {
-            DispatchQueue.main.async {
-                self.error = BRSessionError.badURL.localizedDescription
-            }
+            showErrorWithDescription(description: BRSessionError.badURL.localizedDescription)
             return
         }
         
@@ -69,14 +59,23 @@ class BRViewModel: ObservableObject {
             DispatchQueue.main.async {
                 self.beeList = beeStatus
             }
-        } catch let brError as BRSessionError {
-            DispatchQueue.main.async {
-                self.error = brError.localizedDescription
-            }
         } catch {
-            DispatchQueue.main.async {
-                self.error = error.localizedDescription
-            }
+            errorHandling(with: error)
+        }
+    }
+    
+    private func errorHandling(with error: Error) {
+        guard let brError = error as? BRSessionError else {
+            showErrorWithDescription(description: error.localizedDescription)
+            return
+        }
+        
+        showErrorWithDescription(description: brError.localizedDescription)
+    }
+    
+    private func showErrorWithDescription(description: String) {
+        DispatchQueue.main.async {
+            self.error = description
         }
     }
     
