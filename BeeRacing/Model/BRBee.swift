@@ -7,8 +7,44 @@
 
 import Foundation
 
-struct BRBee: Codable, Identifiable {
-    let id: UUID
+public struct BRBee: Decodable, Identifiable {
+    public let id: UUID
+    public let name: String
+    public let color: String
+    
+    public init(name: String, color: String) {
+        self.id = UUID()
+        self.name = name
+        self.color = color
+    }
+}
+
+struct BeeItem: Decodable {
     let name: String
     let color: String
+
+    var beeItem: BRBee {
+        return BRBee(name: name, color: color)
+    }
+}
+
+class BRBeeMapper {
+    private struct Root: Decodable {
+        private let beeList: [BeeItem]
+
+        var beeItemsList: [BRBee] {
+            return beeList.map { $0.beeItem }
+        }
+    }
+
+    private static let OK_200: Int = 200
+    private init() {}
+
+    static func map(_ data: Data, from response: HTTPURLResponse) throws -> [BRBee] {
+        guard response.statusCode == OK_200, let bees = try? JSONDecoder().decode(Root.self, from: data) else {
+            throw BRSessionError.invalidData
+        }
+
+        return bees.beeItemsList
+    }
 }

@@ -15,6 +15,7 @@ class BRViewModel: ObservableObject {
     //MARK: - Variables
     @Published var error: String?
     @Published var isRaceStarted = false
+    @Published var beeList: [BRBee] = []
     
     var timerData: Int?
     private var raceTimer: Timer?
@@ -37,8 +38,8 @@ class BRViewModel: ObservableObject {
         }
         
         do {
-            let data = try await sessionClient.performRequest(from: url)
-            let timerData = try JSONDecoder().decode(BRTimer.self, from: data)
+            let result = try await sessionClient.performRequest(from: url)
+            let timerData = try JSONDecoder().decode(BRTimer.self, from: result.data)
             DispatchQueue.main.async {
                 self.timerData = timerData.timeInSeconds
                 self.isRaceStarted = true
@@ -54,6 +55,33 @@ class BRViewModel: ObservableObject {
         }
     }
     
+    func updateBeePositions() async {
+        guard let url = URL(string: raceAPIURLString) else {
+            DispatchQueue.main.async {
+                self.error = BRSessionError.badURL.localizedDescription
+            }
+            return
+        }
+        
+        do {
+            let result = try await sessionClient.performRequest(from: url)
+            let beeStatus = try BRBeeMapper.map(result.data, from: result.response as! HTTPURLResponse)
+            DispatchQueue.main.async {
+                self.beeList = beeStatus
+            }
+        } catch let brError as BRSessionError {
+            DispatchQueue.main.async {
+                self.error = brError.localizedDescription
+            }
+        } catch {
+            DispatchQueue.main.async {
+                self.error = error.localizedDescription
+            }
+        }
+    }
+    
+    //MARK: - Timer Methods
+    
     func startRace() {
         resetTimer()
         raceTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(startCountdown), userInfo: nil, repeats: true)
@@ -67,13 +95,15 @@ class BRViewModel: ObservableObject {
     @objc private func startCountdown() {
         guard let timeRemaining = timerData, timeRemaining > 0 else {
             resetTimer()
-            isRaceStarted = false
-            print("Finished")
             return
         }
         
         DispatchQueue.main.async {
             self.timerData = timeRemaining - 1
+        }
+        
+        Task {
+            await self.updateBeePositions()
         }
     }
 }

@@ -13,7 +13,8 @@ public enum BRSessionError: Error {
     case badURL
 }
 
-public typealias BRSessionClientResult = Result<(Data, URLResponse), Error>
+public typealias BRSessionClientResponse = (data: Data, response: URLResponse)
+public typealias BRSessionClientResult = Result<BRSessionClientResponse, Error>
 
 public protocol BRSessionProtocol {
     func get(from url: URL, delegate: URLSessionTaskDelegate?) async throws -> (Data, URLResponse)
