@@ -68,6 +68,16 @@ final class BeeRacingConnectionTests: XCTestCase {
             XCTAssertEqual(error as? BRSessionError, BRSessionError.connectivity)
         }
     }
+    
+    func testDeliversDataOn200HTTPResponse() async throws {
+        let validData = anyData()
+        let validResponse = anyValidURLResponse()
+        let sut = makeSUT(result: .success((validData, validResponse)))
+        
+        let receivedData = try await sut.performRequest(from: anyURL())
+        
+        XCTAssertEqual(receivedData, validData)
+    }
 
     // MARK: -Helpers
     
