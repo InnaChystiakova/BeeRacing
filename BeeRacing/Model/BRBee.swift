@@ -8,7 +8,7 @@
 import Foundation
 
 struct BRBee: Codable, Identifiable {
-    let id = UUID()
+    let id: UUID
     let name: String
     let color: String
 }

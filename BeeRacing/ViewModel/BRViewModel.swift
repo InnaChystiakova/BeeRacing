@@ -8,19 +8,25 @@
 import Foundation
 
 class BRViewModel: ObservableObject {
-    @Published var error: String?
-    
-    var isRaceStarted = false
-    var timerData: Int?
-    
+    //MARK: - Private APIs
     private let timerAPIURLString = "https://rtest.proxy.beeceptor.com/bees/race/duration"
     private let raceAPIURLString = "https://rtest.proxy.beeceptor.com/bees/race/status"
     
+    //MARK: - Variables
+    @Published var error: String?
+    @Published var isRaceStarted = false
+    
+    var timerData: Int?
+    private var raceTimer: Timer?
+    
+    //MARK: - Session Client
     private let sessionClient: BRSessionClient
 
     init(sessionClient: BRSessionClient = BRSessionClient()) {
         self.sessionClient = sessionClient
     }
+    
+    //MARK: - VM Methods
     
     func getTimer() async {
         guard let url = URL(string: timerAPIURLString) else {
@@ -48,5 +54,25 @@ class BRViewModel: ObservableObject {
         }
     }
     
+    func startRace() {
+        resetTimer()
+        raceTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(startCountdown), userInfo: nil, repeats: true)
+    }
     
+    private func resetTimer() {
+        raceTimer?.invalidate()
+        raceTimer = nil
+    }
+    
+    @objc private func startCountdown() {
+        guard let timeRemaining = timerData, timeRemaining > 0 else {
+            resetTimer()
+            isRaceStarted = false
+            return
+        }
+        
+        DispatchQueue.main.async {
+            self.timerData = timeRemaining - 1
+        }
+    }
 }

@@ -12,6 +12,12 @@ struct BRRaceView: View {
     
     var body: some View {
         VStack {
+            List {
+                
+            }
+            .task {
+                await viewModel.startRace()
+            }
         }
     }
 }
