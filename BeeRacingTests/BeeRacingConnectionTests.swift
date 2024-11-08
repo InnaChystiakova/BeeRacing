@@ -8,7 +8,7 @@
 import XCTest
 @testable import BeeRacing
 
-class BeeRacingSessionClient {
+class BRSessionClient {
     private let session: BRSessionProtocol
     
     public init(session: BRSessionProtocol = URLSession.shared) {
@@ -66,7 +66,7 @@ final class BeeRacingConnectionTests: XCTestCase {
 
     // MARK: -Helpers
     
-    private class BeeRacingConnectionStub: BRSessionProtocol {
+    private class BRSessionClientStub: BRSessionProtocol {
         private(set) var url: URL? = nil
         
         let result: BRSessionClientResult
@@ -81,18 +81,18 @@ final class BeeRacingConnectionTests: XCTestCase {
         }
     }
     
-    private func makeSUT(result: BRSessionClientResult) -> BeeRacingSessionClient {
-        let session = BeeRacingConnectionStub(result: result)
-        let sut = BeeRacingSessionClient(session: session)
+    private func makeSUT(result: BRSessionClientResult) -> BRSessionClient {
+        let session = BRSessionClientStub(result: result)
+        let sut = BRSessionClient(session: session)
         return sut
     }
     
-    private func makeSUT(session: BeeRacingConnectionStub) -> BeeRacingSessionClient {
-        return BeeRacingSessionClient(session: session)
+    private func makeSUT(session: BRSessionClientStub) -> BRSessionClient {
+        return BRSessionClient(session: session)
     }
     
-    private func makeSession() -> BeeRacingConnectionStub {
-        return BeeRacingConnectionStub(result: .success(someValidResponse()))
+    private func makeSession() -> BRSessionClientStub {
+        return BRSessionClientStub(result: .success(someValidResponse()))
     }
     
     private func someValidResponse() -> (Data, URLResponse) {
