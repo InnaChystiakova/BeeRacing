@@ -11,37 +11,33 @@ struct BRStartView: View {
     @StateObject var viewModel = BRViewModel()
     @State private var errorMessage: String?
 
-    private let buttonWidth: CGFloat = 190
-    private let buttonHeight: CGFloat = 65
-    private let buttonTitle: String = "Start Bee Racing"
-    
     var body: some View {
-        VStack {
-            Button(buttonTitle) {
-                Task {
-                    await viewModel.getTimer()
+        NavigationStack {
+            VStack {
+                Button("Start Bee Racing") {
+                    Task {
+                        await viewModel.getTimer()
+                    }
                 }
+                .frame(width: 190, height: 65, alignment:.center)
+                .background(.black)
+                .foregroundColor(.white)
+                .cornerRadius(10)
             }
-            .frame(width: buttonWidth, height: buttonHeight, alignment:.center)
-            .background(.black)
-            .foregroundColor(.white)
-            .cornerRadius(10)
-        }
-        .alert(isPresented: .constant(errorMessage != nil)) {
-            Alert(
-                title: Text("Error"),
-                message: Text(errorMessage ?? "Unknown error"),
-                dismissButton: .default(Text("OK"))
-            )
-        }
-        .padding()
-        .onReceive(viewModel.$timerData) { timerData in
-            if let timerData = timerData {
-                print ("Timer data: \(timerData)")
+            .alert(isPresented: .constant(errorMessage != nil)) {
+                Alert(
+                    title: Text("Error"),
+                    message: Text(errorMessage ?? "Unknown error"),
+                    dismissButton: .default(Text("OK"))
+                )
             }
-        }
-        .onReceive(viewModel.$error) { error in
-            errorMessage = error
+            .padding()
+            .navigationDestination(isPresented: $viewModel.isRaceStarted) {
+                BRRaceView(viewModel: viewModel)
+            }
+            .onReceive(viewModel.$error) { error in
+                errorMessage = error
+            }
         }
     }
 }

@@ -8,10 +8,14 @@
 import Foundation
 
 class BRViewModel: ObservableObject {
-    @Published var timerData: Int?
     @Published var error: String?
     
+    var isRaceStarted = false
+    var timerData: Int?
+    
     private let timerAPIURLString = "https://rtest.proxy.beeceptor.com/bees/race/duration"
+    private let raceAPIURLString = "https://rtest.proxy.beeceptor.com/bees/race/status"
+    
     private let sessionClient: BRSessionClient
 
     init(sessionClient: BRSessionClient = BRSessionClient()) {
@@ -28,9 +32,10 @@ class BRViewModel: ObservableObject {
         
         do {
             let data = try await sessionClient.performRequest(from: url)
-            let timerData = try JSONDecoder().decode(BRTimerStruct.self, from: data)
+            let timerData = try JSONDecoder().decode(BRTimer.self, from: data)
             DispatchQueue.main.async {
                 self.timerData = timerData.timeInSeconds
+                self.isRaceStarted = true
             }
         } catch let brError as BRSessionError {
             DispatchQueue.main.async {
@@ -42,4 +47,6 @@ class BRViewModel: ObservableObject {
             }
         }
     }
+    
+    
 }
