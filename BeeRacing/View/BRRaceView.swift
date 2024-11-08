@@ -15,6 +15,7 @@ struct BRRaceView: View {
             List {
                 
             }
+            .navigationBarBackButtonHidden(true)
             .task {
                 await viewModel.startRace()
             }

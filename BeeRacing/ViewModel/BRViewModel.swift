@@ -68,6 +68,7 @@ class BRViewModel: ObservableObject {
         guard let timeRemaining = timerData, timeRemaining > 0 else {
             resetTimer()
             isRaceStarted = false
+            print("Finished")
             return
         }
         
