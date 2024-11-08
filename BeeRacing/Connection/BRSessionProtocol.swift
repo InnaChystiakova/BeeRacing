@@ -9,6 +9,8 @@ import Foundation
 
 public enum BRSessionError: Error {
     case connectivity
+    case invalidData
+    case badURL
 }
 
 public typealias BRSessionClientResult = Result<(Data, URLResponse), Error>
