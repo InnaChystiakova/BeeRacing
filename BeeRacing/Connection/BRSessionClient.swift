@@ -7,18 +7,19 @@
 
 import Foundation
 
-class BRSessionClient {
+final class BRSessionClient {
     private let session: BRSessionProtocol
     
     public init(session: BRSessionProtocol = URLSession.shared) {
         self.session = session
     }
     
-    public func performRequest(from url: URL) async throws -> Data {
-        guard let (data, _) = try? await session.get(from: url, delegate: nil) else {
+    public func performRequest(from url: URL) async throws -> BRSessionClientResponse {
+        do {
+            let (data, response) = try await session.get(from: url, delegate: nil)
+            return (data, response)
+        } catch {
             throw BRSessionError.connectivity
         }
-        
-        return data
     }
 }

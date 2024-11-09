@@ -45,7 +45,8 @@ final class BeeRacingConnectionTests: XCTestCase {
         
         let receivedData = try await sut.performRequest(from: anyURL())
         
-        XCTAssertEqual(receivedData, validData)
+        XCTAssertEqual(receivedData.data, validData)
+        XCTAssertEqual(receivedData.response, validResponse)
     }
 
     // MARK: -Helpers
@@ -97,5 +98,9 @@ final class BeeRacingConnectionTests: XCTestCase {
     
     private func anyNSError() -> NSError {
         return NSError(domain: "any error", code: 0)
+    }
+    
+    private func rateLimitNSError() -> NSError {
+        return NSError(domain: "any error", code: 429)
     }
 }

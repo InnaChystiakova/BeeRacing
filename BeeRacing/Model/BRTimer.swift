@@ -1,5 +1,5 @@
 //
-//  BRTimerItem.swift
+//  BRTimer.swift
 //  BeeRacing
 //
 //  Created by Inna Chystiakova on 08/11/2024.
@@ -7,9 +7,9 @@
 
 import Foundation
 
-public typealias BRTimerResult = Swift.Result<BRTimerStruct, Error>
+public typealias BRTimerResult = Result<BRTimer, Error>
 
-public struct BRTimerStruct: Decodable {
+public struct BRTimer: Decodable {
     let timeInSeconds: Int
     
     init(timeInSeconds: Int) {
