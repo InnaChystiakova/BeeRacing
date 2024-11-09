@@ -7,7 +7,7 @@
 
 import Foundation
 
-public typealias BRTimerResult = Swift.Result<BRTimer, Error>
+public typealias BRTimerResult = Result<BRTimer, Error>
 
 public struct BRTimer: Decodable {
     let timeInSeconds: Int

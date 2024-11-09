@@ -15,10 +15,11 @@ final class BRSessionClient {
     }
     
     public func performRequest(from url: URL) async throws -> BRSessionClientResponse {
-        guard let (data, response) = try? await session.get(from: url, delegate: nil) else {
+        do {
+            let (data, response) = try await session.get(from: url, delegate: nil)
+            return (data, response)
+        } catch {
             throw BRSessionError.connectivity
         }
-        
-        return (data, response)
     }
 }

@@ -8,9 +8,9 @@
 import Foundation
 
 public enum BRSessionError: Error {
+    case badURL
     case connectivity
     case invalidData
-    case badURL
     case invalidResponse
 }
 

@@ -10,6 +10,7 @@ import Foundation
 public enum BRValidatorResult{
     case bee([BRBee])
     case captcha(BRCaptcha)
+    case beeError(BRError)
 }
 
 class BRValidator {
@@ -32,7 +33,8 @@ class BRValidator {
                 let captcha = try JSONDecoder().decode(BRCaptcha.self, from: httpResponse.data)
                 return .captcha(captcha)
             default:
-                throw BRSessionError.invalidData
+                let error = try JSONDecoder().decode(BRError.self, from: httpResponse.data)
+                return .beeError(error)
             }
         } catch {
             throw BRSessionError.invalidData

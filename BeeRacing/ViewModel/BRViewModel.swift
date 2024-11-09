@@ -64,7 +64,11 @@ class BRViewModel: ObservableObject {
                 }
             case let .captcha(captcha):
                 DispatchQueue.main.async {
-                    print("Captcha!!!")
+                    print("Captcha!!!")             // show captcha web view
+                }
+            case let .beeError(error):
+                DispatchQueue.main.async {
+                    print("Bee Error!!!")           // show error screen
                 }
             }
         } catch {

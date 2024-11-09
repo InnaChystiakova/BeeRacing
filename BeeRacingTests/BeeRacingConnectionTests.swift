@@ -99,4 +99,8 @@ final class BeeRacingConnectionTests: XCTestCase {
     private func anyNSError() -> NSError {
         return NSError(domain: "any error", code: 0)
     }
+    
+    private func rateLimitNSError() -> NSError {
+        return NSError(domain: "any error", code: 429)
+    }
 }
