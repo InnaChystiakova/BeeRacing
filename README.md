@@ -13,7 +13,7 @@
 
 ### Problems I faced  
 ❌ Dismiss Captcha WebView properly to decrease memory usage and re-create bee race  
-(I didn't understand which request has to be listened to perorm captcha undo)  
+(I didn't understand which request has to be listened to perform captcha undo)  
 ❌ Show timer counter on the bee race screen  
 (I didn't understand completely the requirements for this header, so there is just a sceleton in BRTimerView class)  
 
