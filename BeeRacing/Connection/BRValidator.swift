@@ -33,7 +33,7 @@ class BRValidator {
                 let captcha = try JSONDecoder().decode(BRCaptcha.self, from: httpResponse.data)
                 return .captcha(captcha)
             default:
-                let error = try JSONDecoder().decode(BRError.self, from: httpResponse.data)
+                let error = try BRErrorMapper.map(httpResponse.data, from: response)
                 return .beeError(error)
             }
         } catch {

@@ -40,11 +40,6 @@
 			path = BeeRacingTests;
 			sourceTree = "<group>";
 		};
-		B35BCA992CDE670800105FF1 /* BeeRacingUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = BeeRacingUITests;
-			sourceTree = "<group>";
-		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +72,6 @@
 			children = (
 				B35BCA7E2CDE670700105FF1 /* BeeRacing */,
 				B35BCA8F2CDE670800105FF1 /* BeeRacingTests */,
-				B35BCA992CDE670800105FF1 /* BeeRacingUITests */,
 				B35BCA7D2CDE670700105FF1 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -152,9 +146,6 @@
 			);
 			dependencies = (
 				B35BCA982CDE670800105FF1 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				B35BCA992CDE670800105FF1 /* BeeRacingUITests */,
 			);
 			name = BeeRacingUITests;
 			packageProductDependencies = (
