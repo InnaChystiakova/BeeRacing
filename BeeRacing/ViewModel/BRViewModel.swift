@@ -16,6 +16,8 @@ class BRViewModel: ObservableObject {
     @Published var error: String?
     @Published var isRaceStarted = false
     @Published var beeList: [BRBee] = []
+    @Published var showCaptcha: Bool = false
+    @Published var captchaURL: URL?
     
     var timerData: Int?
     private var raceTimer: Timer?
@@ -27,7 +29,7 @@ class BRViewModel: ObservableObject {
         self.sessionClient = sessionClient
     }
     
-    //MARK: - VM Methods
+    //MARK: - View Model Methods
     
     func getTimer() async {
         guard let url = URL(string: timerAPIURLString) else {
@@ -64,11 +66,15 @@ class BRViewModel: ObservableObject {
                 }
             case let .captcha(captcha):
                 DispatchQueue.main.async {
-                    print("Captcha!!!")             // show captcha web view
+                    if let captchaURL = URL(string: captcha.captchaUrl) {
+                        self.captchaURL = captchaURL
+                        self.showCaptcha = true
+                    }
                 }
             case let .beeError(error):
                 DispatchQueue.main.async {
-                    print("Bee Error!!!")           // show error screen
+                    self.resetTimer()
+                    self.alertUI(with: error.message)
                 }
             }
         } catch {
@@ -76,9 +82,13 @@ class BRViewModel: ObservableObject {
         }
     }
     
-    private func alertUI(with error: Error) {
-        guard let brError = error as? BRSessionError else {
-            showErrorWithDescription(description: error.localizedDescription)
+    private func alertUI(with errorDescription: String) {
+        showErrorWithDescription(description: errorDescription)
+    }
+    
+    private func alertUI(with systemError: Error) {
+        guard let brError = systemError as? BRSessionError else {
+            showErrorWithDescription(description: systemError.localizedDescription)
             return
         }
         
@@ -95,7 +105,7 @@ class BRViewModel: ObservableObject {
     
     func startRace() {
         resetTimer()
-        raceTimer = Timer.scheduledTimer(timeInterval: 1, target: self, selector: #selector(startCountdown), userInfo: nil, repeats: true)
+        raceTimer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(startCountdown), userInfo: nil, repeats: true)
     }
     
     private func resetTimer() {
