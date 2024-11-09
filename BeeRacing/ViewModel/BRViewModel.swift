@@ -11,6 +11,7 @@ class BRViewModel: ObservableObject {
     //MARK: - Private APIs
     private let timerAPIURLString = "https://rtest.proxy.beeceptor.com/bees/race/duration"
     private let raceAPIURLString = "https://rtest.proxy.beeceptor.com/bees/race/status"
+    private let undoCptchaAPIURLString = "https://www.google.com/recaptcha/api2/userverify"
     
     //MARK: - Variables
     @Published var error: String?
@@ -24,7 +25,7 @@ class BRViewModel: ObservableObject {
     
     //MARK: - Session Client
     private let sessionClient: BRSessionClient
-
+    
     init(sessionClient: BRSessionClient = BRSessionClient()) {
         self.sessionClient = sessionClient
     }
@@ -59,20 +60,16 @@ class BRViewModel: ObservableObject {
             let result = try await sessionClient.performRequest(from: url)
             let viewModelResult = try BRValidator.handleJSON(with: result)
             
-            switch viewModelResult {
-            case let .bee(beeList):
-                DispatchQueue.main.async {
+            DispatchQueue.main.async {
+                switch viewModelResult {
+                case let .bee(beeList):
                     self.beeList = beeList
-                }
-            case let .captcha(captcha):
-                DispatchQueue.main.async {
+                case let .captcha(captcha):
                     if let captchaURL = URL(string: captcha.captchaUrl) {
                         self.captchaURL = captchaURL
                         self.showCaptcha = true
                     }
-                }
-            case let .beeError(error):
-                DispatchQueue.main.async {
+                case let .beeError(error):
                     self.resetTimer()
                     self.alertUI(with: error.message)
                 }
