@@ -16,3 +16,8 @@
 (I didn't understand which request has to be listened to perorm captcha undo)  
 ❌ Show timer counter on the bee race screen  
 (I didn't understand completely the requirements for this header, so there is just a sceleton in BRTimerView class)  
+
+### P.S
+🙏 I'm sorry for the last commit in main.  
+I wanted to do all my best for this task at this complicated time.  
+This is a fascinating task that you can't tear yourself away from.  
